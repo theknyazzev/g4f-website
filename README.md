@@ -329,7 +329,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- **GitHub**: [@theknyazzev](https://github.com/theknyazzzev)
+- **GitHub**: [@theknyazzev](https://github.com/theknyazzev)
 - **Email**: theknyazzev@gmail.com
 - **Project**: [g4f website](https://github.com/theknyazzev/g4f-website)
 
