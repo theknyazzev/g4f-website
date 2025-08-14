@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Premium ChatGPT</title>
+    <link rel="stylesheet" href="/static/styles.css?v=9.9">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google OAuth API -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Overlay для мобильного меню -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <!-- Боковое меню -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <h2 class="sidebar-title">
+                    <i class="fas fa-comments"></i>
+                    <span class="sidebar-text" data-translate="chats">Чаты</span>
+                </h2>
+            </div>
+            
+            <div class="new-chat-btn" id="newChatBtn">
+                <i class="fas fa-plus"></i>
+                <span class="sidebar-text" data-translate="new_chat">Новый чат</span>
+            </div>
+            
+            <div class="chat-list" id="chatList">
+                <!-- Список чатов будет генерироваться динамически -->
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="sidebar-text user-name" data-translate="user">Пользователь</span>
+                    </div>
+                    <button class="settings-menu-btn" id="settingsMenuBtn" data-translate-title="settings" title="Настройки">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Основная область чата -->
+        <div class="main-content">
+            <div class="chat-header">
+                <!-- Мобильная кнопка меню -->
+                <div class="mobile-menu-btn" id="mobileSidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                
+                <div class="chat-info">
+                    <h3 id="currentChatTitle" data-translate="new_chat">Новый чат</h3>
+                    <span class="chat-model" data-translate="auto">Авто</span>
+                </div>
+                <div class="chat-actions">
+                    <button class="header-btn" id="clearChatBtn" data-translate-title="clear_chat" title="Очистить чат">
+                        <i class="fas fa-broom"></i>
+                    </button>
+                    <button class="header-btn" id="exportChatBtn" data-translate-title="export_chat" title="Экспорт чата">
+                        <i class="fas fa-share"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="chat-container" id="chatContainer">
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-content">
+                        <div class="logo">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h1 data-translate="welcome_title">Добро пожаловать в Premium ChatGPT</h1>
+                        <p data-translate="welcome_subtitle">Начните новую беседу, задав любой вопрос</p>
+                        
+                        <div class="example-prompts">
+                            <div class="prompt-card" data-prompt="Объясни мне квантовую физику простыми словами">
+                                <i class="fas fa-atom"></i>
+                                <span data-translate="explain_quantum">Объясни квантовую физику</span>
+                            </div>
+                            <div class="prompt-card" data-prompt="Помоги написать план для изучения программирования">
+                                <i class="fas fa-code"></i>
+                                <span data-translate="programming_plan">План изучения программирования</span>
+                            </div>
+                            <div class="prompt-card" data-prompt="Расскажи интересную историю о космосе">
+                                <i class="fas fa-rocket"></i>
+                                <span data-translate="space_story">История о космосе</span>
+                            </div>
+                            <div class="prompt-card" data-prompt="Дай советы по здоровому образу жизни">
+                                <i class="fas fa-heart"></i>
+                                <span data-translate="healthy_lifestyle">Здоровый образ жизни</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Сообщения будут добавляться динамически -->
+                    
+                    <!-- Лоадер для ответа ИИ -->
+                    <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <span data-translate="chatgpt_typing">ChatGPT печатает...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-container">
+                <div class="pause-continue-section" id="pauseContinueSection" style="display: none;">
+                    <div class="pause-message">
+                        <i class="fas fa-pause-circle"></i>
+                        <span data-translate="generation_paused">Генерация приостановлена</span>
+                    </div>
+                    <button id="continueGenerationBtn" class="btn btn-primary">
+                        <i class="fas fa-play"></i>
+                        <span data-translate="continue_generation">Продолжить генерацию</span>
+                    </button>
+                </div>
+                
+                <div class="file-preview" id="filePreview" style="display: none;">
+                    <div class="file-preview-content">
+                        <img id="previewImage" src="" alt="Предварительный просмотр">
+                        <div class="file-preview-info">
+                            <span id="fileName">Имя файла</span>
+                            <button id="removeFile" class="remove-file-btn" title="Удалить файл">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        data-translate-placeholder="write_message"
+                        placeholder="Напишите сообщение..." 
+                        maxlength="4000"
+                    ></textarea>
+                    <div class="input-actions">
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                        
+                        <!-- Единая кнопка с выпадающим меню -->
+                        <div class="image-actions-dropdown">
+                            <button id="imageActionsButton" class="image-actions-btn" data-translate-title="image_actions" title="Действия с изображениями">
+                                <i class="fas fa-images"></i>
+                                <i class="fas fa-chevron-down dropdown-arrow"></i>
+                            </button>
+                            <div class="image-actions-menu" id="imageActionsMenu">
+                                <div class="image-actions-item" id="uploadImageAction" data-action="upload">
+                                    <i class="fas fa-upload"></i>
+                                    <span data-translate="upload_image">Загрузить изображение</span>
+                                </div>
+                                <div class="image-actions-item" id="generateImageAction" data-action="generate">
+                                    <i class="fas fa-magic"></i>
+                                    <span data-translate="generate_image">Генерировать изображение</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button id="sendButton" class="send-btn" disabled>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-footer">
+                    <div class="footer-left">
+                        <span class="char-counter">
+                            <span id="charCount">0</span>/4000
+                        </span>
+                    </div>
+                    <div class="footer-center">
+                        <!-- Центральное пространство -->
+                    </div>
+                    <div class="footer-right">
+                        <div class="model-selector">
+                            <select id="modelSelect" class="model-select">
+                                <optgroup label="Режим работы">
+                                    <option value="AUTO|auto" selected>Авто</option>
+                                </optgroup>
+                                <optgroup label="GPT модели">
+                                    <option value="gpt-4|AnyProvider,Yqcloud,WeWordle">GPT-4</option>
+                                    <option value="gpt-4o|AnyProvider">GPT-4o</option>
+                                    <option value="gpt-4o-mini|AnyProvider,OIVSCodeSer2,Chatai">GPT-4o Mini</option>
+                                    <option value="gpt-4.1-mini|Blackbox,OIVSCodeSer0501">GPT-4.1 Mini</option>
+                                    <option value="gpt-4.1-nano|Blackbox">GPT-4.1 Nano</option>
+                                    <option value="o1-mini|AnyProvider">o1 Mini</option>
+                                </optgroup>
+                                <optgroup label="Gemini модели">
+                                    <option value="gemini-1.5-pro|Free2GPT">Gemini 1.5 Pro</option>
+                                    <option value="gemini-1.5-flash|Free2GPT">Gemini 1.5 Flash</option>
+                                </optgroup>
+                                <optgroup label="Qwen модели">
+                                    <option value="qwen-2.5-max|Qwen_Qwen_2_5_Max">Qwen 2.5 Max</option>
+                                    <option value="qwen-2.5|Qwen_Qwen_2_5">Qwen 2.5</option>
+                                    <option value="qwen-3-235b|Qwen_Qwen_3">Qwen 3 235B</option>
+                                    <option value="qwen-3-14b|Qwen_Qwen_3">Qwen 3 14B</option>
+                                    <option value="qwen-3-1.7b|Qwen_Qwen_3">Qwen 3 1.7B</option>
+                                </optgroup>
+                                <optgroup label="DeepSeek модели">
+                                    <option value="deepseek-r1|LambdaChat">DeepSeek R1</option>
+                                    <option value="deepseek-r1-0528|LambdaChat">DeepSeek R1 (0528)</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно статистики -->
+    <div class="modal-overlay" id="statsModal">
+        <div class="modal stats-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-chart-line"></i> <span data-translate="usage_statistics">Статистика использования</span></h3>
+                <button class="modal-close" id="closeStatsModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="stats-summary">
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="summary-info">
+                            <div class="summary-title" data-translate="general_activity">Общая активность</div>
+                            <div class="summary-stats">
+                                <span id="totalChats">0</span> <span data-translate="chats_count">чатов</span> • 
+                                <span id="totalMessages">0</span> <span data-translate="messages_count">сообщений</span> • 
+                                <span id="totalCharacters">0</span> <span data-translate="characters_count">символов</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <span data-translate="activity_level">Уровень активности</span>
+                            <span class="progress-percentage" id="activityPercentage">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="activityProgress"></div>
+                            <div class="progress-glow"></div>
+                        </div>
+                        <div class="progress-labels">
+                            <span data-translate="beginner">Новичок</span>
+                            <span data-translate="active">Активный</span>
+                            <span data-translate="expert">Эксперт</span>
+                        </div>
+                    </div>
+                    
+                    <div class="achievement-section">
+                        <h4><i class="fas fa-trophy"></i> <span data-translate="achievements">Достижения</span></h4>
+                        <div class="achievements-grid" id="achievementsGrid">
+                            <!-- Достижения будут добавляться динамически -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="exportStats" data-translate="export_statistics">Экспорт статистики</button>
+                <button class="btn btn-primary" id="closeStats" data-translate="close">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для описания достижения -->
+    <div class="modal-overlay" id="achievementModal">
+        <div class="modal achievement-modal">
+            <div class="modal-header">
+                <h3 id="achievementModalTitle">
+                    <i id="achievementModalIcon"></i>
+                    <span id="achievementModalName"></span>
+                </h3>
+                <button class="modal-close" id="closeAchievementModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="achievement-detail">
+                    <div class="achievement-status" id="achievementStatus">
+                        <i class="fas fa-check-circle"></i>
+                        <span data-translate="achievements.modal.unlocked">Достижение разблокировано!</span>
+                    </div>
+                    <div class="achievement-description">
+                        <h4 data-translate="achievements.modal.description_label">Описание:</h4>
+                        <p id="achievementModalDesc"></p>
+                    </div>
+                    <div class="achievement-progress" id="achievementProgress">
+                        <h4 data-translate="achievements.modal.progress_label">Прогресс:</h4>
+                        <div class="progress-bar small">
+                            <div class="progress-fill" id="achievementProgressFill"></div>
+                        </div>
+                        <span id="achievementProgressText"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="closeAchievement" data-translate="achievements.modal.close">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для переименования чата -->
+    <div class="modal-overlay" id="renameModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 data-translate="rename_chat">Переименовать чат</h3>
+                <button class="modal-close" id="closeRenameModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="chatRenameInput" data-translate-placeholder="enter_chat_name" placeholder="Введите название чата">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelRename" data-translate="cancel">Отмена</button>
+                <button class="btn btn-primary" id="confirmRename" data-translate="save">Сохранить</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Мобильное контекстное меню -->
+    <div class="mobile-context-menu" id="mobileContextMenu">
+        <div class="context-menu-item" id="contextRename">
+            <i class="fas fa-edit"></i>
+            <span data-translate="rename">Переименовать</span>
+        </div>
+        <div class="context-menu-item danger" id="contextDelete">
+            <i class="fas fa-trash"></i>
+            <span data-translate="delete">Удалить</span>
+        </div>
+    </div>
+
+    <!-- Модальное окно для просмотра изображения -->
+    <div class="modal-overlay" id="imageModal">
+        <div class="image-modal">
+            <div class="image-modal-header">
+                <button class="modal-close" id="closeImageModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="image-modal-body">
+                <img id="modalImage" src="" alt="Полноразмерное изображение">
+            </div>
+            <div class="image-modal-footer">
+                <p id="imageModalCaption">Нажмите в любом месте, чтобы закрыть</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно настроек -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-cog"></i> <span data-translate="settings">Настройки</span></h3>
+                <button class="modal-close" onclick="closeSettingsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Profile Section Header -->
+                <div class="section-header">
+                    <h4 data-translate="profile">Профиль</h4>
+                </div>
+
+                <!-- Email Section -->
+                <div class="setting-item">
+                    <div class="setting-icon email">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-details">
+                            <h5>Email</h5>
+                            <p id="userEmailDisplay" data-translate="not_specified">Не указан</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Google Section -->
+                <div class="setting-item">
+                    <div class="setting-icon google">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-details">
+                            <h5 data-translate="google_account">Google Аккаунт</h5>
+                            <p id="googleStatusText" style="display: none;" data-translate="not_connected">Не подключено</p>
+                        </div>
+                    </div>
+                    <div class="setting-action">
+                        <button id="googleSignInBtn" class="google-signin-btn" onclick="signInWithGoogle()" style="display: block;" data-translate="sign_in">
+                            Войти
+                        </button>
+                        <button id="googleSignOutBtn" class="google-signout-btn" onclick="signOutFromGoogle()" style="display: none;" data-translate="sign_out">
+                            Выйти
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Data Management Section -->
+                <div class="setting-item" onclick="openDataManagementModal()">
+                    <div class="setting-icon data">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-details">
+                            <h5 data-translate="data_management">Управление данными</h5>
+                            <p data-translate="export_clear_chats">Экспорт и очистка чатов</p>
+                        </div>
+                    </div>
+                    <div class="setting-action">
+                        <i class="fas fa-chevron-right chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- Application Section Header -->
+                <div class="section-header">
+                    <h4 data-translate="application">Приложение</h4>
+                </div>
+
+                <!-- Font Size Section -->
+                <div class="setting-item">
+                    <div class="setting-icon font-size">
+                        <i class="fas fa-font"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-details">
+                            <h5 data-translate="font_size">Размер шрифта</h5>
+                            <p id="fontSizeSettingText" data-translate="default">По умолчанию</p>
+                        </div>
+                    </div>
+                    <div class="setting-action font-size-controls">
+                        <button class="font-settings-btn" onclick="openFontSettingsModal()" data-translate-title="adjust_font_size" title="Настроить размер шрифта">
+                            <i class="fas fa-sliders-h"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Language Section -->
+                <div class="setting-item" onclick="openLanguageModal()">
+                    <div class="setting-icon language">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-details">
+                            <h5 data-translate="language">Язык</h5>
+                            <p id="currentLanguageText" data-translate="russian">Русский</p>
+                        </div>
+                    </div>
+                    <div class="setting-action">
+                        <i class="fas fa-chevron-right chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- Integrations Section Header -->
+                <div class="section-header">
+                    <h4 data-translate="integrations">Интеграции</h4>
+                </div>
+
+                <!-- Notion Integration Section -->
+                <div class="setting-item" onclick="openNotionIntegrationModal()">
+                    <div class="setting-icon notion">
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-details">
+                            <h5 data-translate="notion_integration">Notion</h5>
+                        </div>
+                    </div>
+                    <div class="setting-action">
+                        <i class="fas fa-chevron-right chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- About Section Header -->
+                <div class="section-header">
+                    <h4 data-translate="about">О программе</h4>
+                </div>
+
+                <!-- Version Section -->
+                <div class="setting-item">
+                    <div class="setting-icon version">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-details">
+                            <h5 data-translate="version">Версия</h5>
+                            <p id="appVersion">1.0.0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms and Privacy Section -->
+                <div class="setting-item" onclick="openServiceAgreementModal()">
+                    <div class="setting-icon legal">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-details">
+                            <h5 data-translate="service_agreement">Соглашение об обслуживании</h5>
+                        </div>
+                    </div>
+                    <div class="setting-action">
+                        <i class="fas fa-chevron-right chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно настройки размера шрифта -->
+    <div class="modal-overlay" id="fontSettingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-font"></i> <span data-translate="font_size">Размер шрифта</span></h3>
+                <button class="modal-close" onclick="closeFontSettingsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Preview Messages -->
+                <div class="font-preview-container">
+                    <div class="message user-message">
+                        <div class="message-content">
+                            <p data-translate="font_preview_text">Предпросмотр размера шрифта</p>
+                        </div>
+                    </div>
+                    <div class="message ai-message">
+                        <div class="message-content">
+                            <p data-translate="font_slider_instruction">Вы можете изменить размер шрифта, перетащив ползунок ниже</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Font Size Slider -->
+                <div class="font-slider-container">
+                    <div class="slider-header">
+                        <span class="slider-label" data-translate="font_size">Размер шрифта</span>
+                        <span class="slider-value" id="fontSliderValue" data-translate="default">По умолчанию</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="fontSizeSlider" min="0" max="4" step="1" value="2" class="font-slider">
+                        <div class="slider-marks">
+                            <span class="mark" data-translate="very_small">Очень маленький</span>
+                            <span class="mark" data-translate="small">Маленький</span>
+                            <span class="mark default" data-translate="default">По умолчанию</span>
+                            <span class="mark" data-translate="large">Большой</span>
+                            <span class="mark" data-translate="very_large">Очень большой</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="resetFontSize()" data-translate="reset">Сбросить</button>
+                <button class="btn btn-primary" onclick="closeFontSettingsModal()" data-translate="close">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно управления данными -->
+    <div class="modal-overlay" id="dataManagementModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-database"></i> <span data-translate="data_management">Управление данными</span></h3>
+                <button class="modal-close" onclick="closeDataManagementModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Training Settings -->
+                <div class="data-section">
+                    <div class="training-setting">
+                        <div class="training-header">
+                            <div class="training-info">
+                                <h4 data-translate="improve_model_for_all">Улучшим модель для всех</h4>
+                            </div>
+                            <div class="training-toggle">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="trainingToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <p class="training-description" data-translate="training_description">Разрешить использовать ваш контент для обучения наших моделей и улучшения наших сервисов. Мы принимаем меры для защиты вашей конфиденциальности.</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="data-actions">
+                    <button class="data-action-btn delete-chats-btn" onclick="confirmDeleteAllChats()">
+                        <i class="fas fa-trash"></i>
+                        <span data-translate="delete_all_chats">Удалить все чаты</span>
+                    </button>
+                    <button class="data-action-btn delete-account-btn" onclick="confirmDeleteAccount()">
+                        <i class="fas fa-user-times"></i>
+                        <span data-translate="delete_account">Удалить аккаунт</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно соглашения об обслуживании -->
+    <div class="modal-overlay" id="serviceAgreementModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-contract"></i> <span data-translate="service_agreement">Соглашение об обслуживании</span></h3>
+                <button class="modal-close" onclick="closeServiceAgreementModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="legal-buttons-container">
+                    <button class="legal-btn terms-btn" onclick="openTermsOfServiceModal()">
+                        <i class="fas fa-file-alt"></i>
+                        <div class="legal-btn-content">
+                            <h4 data-translate="terms_of_service">Условия использования</h4>
+                            <p data-translate="terms_description">Правила и условия использования сервиса</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    
+                    <button class="legal-btn privacy-btn" onclick="openPrivacyPolicyModal()">
+                        <i class="fas fa-shield-alt"></i>
+                        <div class="legal-btn-content">
+                            <h4 data-translate="privacy_policy">Политика конфиденциальности</h4>
+                            <p data-translate="privacy_description">Как мы обрабатываем ваши данные</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно условий использования -->
+    <div class="modal-overlay" id="termsOfServiceModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-alt"></i> <span id="termsTitle">Условия использования</span></h3>
+                <button class="modal-close" onclick="closeTermsOfServiceModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="legal-content">
+                    <div class="legal-last-updated" id="termsLastUpdated"></div>
+                    <div class="legal-sections" id="termsSections">
+                        <!-- Содержимое будет загружено из JSON -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeTermsOfServiceModal()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно политики конфиденциальности -->
+    <div class="modal-overlay" id="privacyPolicyModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-shield-alt"></i> <span id="privacyTitle">Политика конфиденциальности</span></h3>
+                <button class="modal-close" onclick="closePrivacyPolicyModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="legal-content">
+                    <div class="legal-last-updated" id="privacyLastUpdated"></div>
+                    <div class="legal-sections" id="privacySections">
+                        <!-- Содержимое будет загружено из JSON -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closePrivacyPolicyModal()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно выбора языка -->
+    <div class="modal-overlay" id="languageModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-globe"></i> <span data-translate="choose_language">Выбор языка</span></h3>
+                <button class="modal-close" onclick="closeLanguageModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="language-options">
+                    <div class="language-option" onclick="selectLanguage('ru')" data-lang="ru">
+                        <div class="language-info">
+                            <h4 data-translate="russian">Русский</h4>
+                            <p data-translate="default">По умолчанию</p>
+                        </div>
+                        <div class="language-check" id="lang-check-ru">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="language-option" onclick="selectLanguage('en')" data-lang="en">
+                        <div class="language-info">
+                            <h4 data-translate="english">English</h4>
+                            <p data-translate="english_desc">English</p>
+                        </div>
+                        <div class="language-check" id="lang-check-en">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="language-option" onclick="selectLanguage('be')" data-lang="be">
+                        <div class="language-info">
+                            <h4 data-translate="belarusian">Беларуская</h4>
+                            <p data-translate="belarusian_desc">Беларуская мова</p>
+                        </div>
+                        <div class="language-check" id="lang-check-be">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="language-option" onclick="selectLanguage('uk')" data-lang="uk">
+                        <div class="language-info">
+                            <h4 data-translate="ukrainian">Українська</h4>
+                            <p data-translate="ukrainian_desc">Українська мова</p>
+                        </div>
+                        <div class="language-check" id="lang-check-uk">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeLanguageModal()" data-translate="close">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно интеграции с Notion -->
+    <div class="modal-overlay" id="notionIntegrationModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><span class="notion-modal-icon"></span> <span data-translate="notion_integration">Notion Integration</span></h3>
+                <button class="modal-close" onclick="closeNotionIntegrationModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Integration Toggle Section -->
+                <div class="notion-toggle-section">
+                    <div class="training-header">
+                        <div class="training-info">
+                            <h4 data-translate="notion_integration_title">Интеграция с Notion</h4>
+                        </div>
+                        <div class="training-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notionToggle" onchange="toggleNotionIntegration(this)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <p class="training-description" data-translate="notion_description">Интеграция с Notion для сохранения заметок и синхронизации данных чатов</p>
+                </div>
+
+                <!-- API Key Section -->
+                <div class="notion-api-section" id="notionApiSection">
+                    <label for="notionApiKey" class="api-key-label">
+                        <i class="fas fa-key"></i>
+                        <span data-translate="api_key">API Ключ</span>
+                    </label>
+                    <div class="api-key-input-group">
+                        <input type="password" id="notionApiKey" class="api-key-input" 
+                               data-translate-placeholder="enter_notion_api_key" 
+                               placeholder="Введите ваш Notion API ключ..."
+                               oninput="handleNotionApiKeyInput()">
+                        <button class="btn btn-secondary btn-show-hide" onclick="toggleApiKeyVisibility()">
+                            <i class="fas fa-eye" id="apiKeyToggleIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Page Selection Section -->
+                <div class="notion-page-section" id="notionPageSection" style="display: none;">
+                    <div class="section-header">
+                        <h5><i class="fas fa-file-alt"></i> <span data-translate="select_page">Выбор страницы</span></h5>
+                        <button class="btn btn-secondary btn-refresh" onclick="loadNotionPages()" id="refreshPagesBtn">
+                            <i class="fas fa-sync-alt"></i>
+                            <span data-translate="refresh">Обновить</span>
+                        </button>
+                    </div>
+                    
+                    <div class="pages-list" id="notionPagesList">
+                        <div class="loading-pages">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span data-translate="loading_pages">Загрузка страниц...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="selected-page" id="selectedPageInfo" style="display: none;">
+                        <div class="info-note">
+                            <i class="fas fa-check-circle"></i>
+                            <span><strong data-translate="selected_page">Выбранная страница:</strong> <span id="selectedPageTitle"></span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons Section -->
+                <div class="notion-actions" id="notionActionsSection" style="display: none;">
+                    <button class="btn btn-success" onclick="saveNotionSettings()" id="saveNotionBtn">
+                        <i class="fas fa-save"></i>
+                        <span data-translate="save_settings">Сохранить настройки</span>
+                    </button>
+                </div>
+
+
+
+                <!-- Instructions Section -->
+                <div class="notion-instructions">
+                    <div class="instructions-header" onclick="toggleInstructions()">
+                        <h5><i class="fas fa-question-circle"></i> <span data-translate="how_to_get_api_key">Как получить API ключ?</span></h5>
+                        <i class="fas fa-chevron-down" id="instructionsChevron"></i>
+                    </div>
+                    <div class="instructions-content" id="instructionsContent" style="display: none;">
+                        <div class="info-note">
+                            <i class="fas fa-info-circle"></i>
+                            <span><strong>Важно:</strong> Для работы с Notion API нужен полноценный аккаунт с правами создания интеграций.</span>
+                        </div>
+                        <ol>
+                            <li data-translate="instruction_1">Перейдите на сайт Notion.so и войдите в свой аккаунт</li>
+                            <li data-translate="instruction_2">Откройте страницу интеграций: https://www.notion.so/my-integrations</li>
+                            <li data-translate="instruction_3">Нажмите "New integration" → выберите "Internal Integration"</li>
+                            <li data-translate="instruction_4">Дайте название интеграции (например "ChatGPT Notes")</li>
+                            <li data-translate="instruction_5">Скопируйте "Internal Integration Token" - это ваш API ключ</li>
+                            <li data-translate="instruction_6"><strong>КРИТИЧЕСКИ ВАЖНО:</strong> Перейдите к странице в Notion</li>
+                            <li data-translate="instruction_7">Нажмите "..." → "Add connections" → выберите вашу интеграцию</li>
+                            <li data-translate="instruction_8">Без этого шага API не будет работать!</li>
+                            <li data-translate="instruction_9">Вернитесь сюда, введите API ключ и сохраните настройки</li>
+                        </ol>
+                        <div class="success-note">
+                            <i class="fas fa-check-circle"></i>
+                            <span><strong>Поддерживаемые типы страниц:</strong><br/>
+                            • Обычные страницы - заметки добавляются к существующей странице<br/>
+                            • Страницы в базах данных - создаются новые записи<br/>
+                            • Дочерние страницы - создаются как подстраницы</span>
+                        </div>
+                        <div class="warning-note">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span data-translate="api_key_warning">Внимание: Если видите ошибку "account is restricted" - ваш аккаунт не поддерживает API интеграции. Проверьте тип аккаунта и права в workspace.</span>
+                        </div>
+                        <div class="info-note">
+                            <i class="fas fa-lightbulb"></i>
+                            <span><strong>Совет:</strong> Создайте отдельную страницу для заметок из чата, чтобы не засорять основные документы.</span>
+                        </div>
+                        <div class="info-note">
+                            <i class="fas fa-info-circle"></i>
+                            <span data-translate="account_requirements">Требования: Для использования API нужен аккаунт Notion с правами Admin/Owner в workspace. Некоторые корпоративные аккаунты могут иметь ограничения.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="testNotionConnection()" data-translate="test_connection">Проверить подключение</button>
+                <button class="btn btn-primary" onclick="saveNotionSettings()" data-translate="save">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    {% csrf_token %}
+    <script>
+        // Получаем CSRF токен
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        window.csrfToken = csrfToken;
+    </script>
+    <script src="/static/translations.js?v=1.2"></script>
+    <script src="/static/script.js?v=12.1"></script>
+</body>
+</html>

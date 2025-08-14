@@ -1,0 +1,4326 @@
+/* Общие стили */
+:root {
+    --vh: 1vh;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+/* Специальные правила для медиа-элементов */
+img, video, canvas, svg {
+    max-width: 100%;
+    height: auto;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    background: #212121;
+    color: #ffffff;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    overflow: hidden;
+    /* Предотвращаем скролл при появлении клавиатуры */
+    position: fixed;
+    width: 100%;
+    /* Предотвращаем горизонтальную прокрутку */
+    overflow-x: hidden;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    background: #212121;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* Боковое меню */
+.sidebar {
+    width: 280px;
+    background: #171717;
+    border-right: 1px solid #444;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 60px;
+}
+
+.sidebar.collapsed .sidebar-text {
+    display: none;
+}
+
+.sidebar.collapsed .chat-item-content {
+    justify-content: center;
+}
+
+.sidebar.collapsed .chat-item-title {
+    display: none;
+}
+
+.sidebar.collapsed .chat-item-icon {
+    color: #10a37f;
+}
+
+.sidebar.collapsed .chat-item-actions {
+    display: none;
+}
+
+.sidebar.collapsed .chat-item:hover .chat-item-actions {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    height: 100%;
+    width: 120px;
+    background: #2d2d2d;
+    border-radius: 0 8px 8px 0;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    z-index: 1001;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar.collapsed .chat-item:hover .chat-action-btn {
+    padding: 8px;
+    font-size: 14px;
+}
+
+/* Убираем старые стили тултипа */
+.sidebar.collapsed .chat-item::after,
+.sidebar.collapsed .chat-item .chat-actions-tooltip {
+    display: none !important;
+}
+
+.sidebar.collapsed .new-chat-btn {
+    justify-content: center;
+    padding: 12px;
+    margin: 16px 8px;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    padding: 20px 16px;
+    border-bottom: 1px solid #444;
+    gap: 12px;
+}
+
+.sidebar-toggle {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+}
+
+.sidebar-toggle:hover {
+    background: #2d2d2d;
+}
+
+.sidebar-title {
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ffffff;
+}
+
+.new-chat-btn {
+    margin: 16px;
+    padding: 12px 16px;
+    background: #10a37f;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.new-chat-btn:hover {
+    background: #0d8268;
+}
+
+.chat-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 16px;
+}
+
+.chat-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.chat-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-list::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 2px;
+}
+
+.chat-item {
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+}
+
+.chat-item:hover {
+    background: #2d2d2d;
+}
+
+.chat-item.active {
+    background: #2d3748;
+    box-shadow: 0 1px 3px rgba(16, 163, 127, 0.1);
+}
+
+.chat-item.active .chat-item-title {
+    color: #e2e8f0;
+    font-weight: 500;
+}
+
+.chat-item.active .chat-item-icon {
+    color: #e2e8f0;
+}
+
+.chat-item.active:hover {
+    background: #374151;
+}
+
+.chat-item-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.chat-item-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #10a37f;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.chat-item-title {
+    font-size: 14px;
+    color: #ececf1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+}
+
+.chat-item-actions {
+    display: none;
+    gap: 4px;
+}
+
+.chat-item:hover .chat-item-actions {
+    display: flex;
+}
+
+.chat-action-btn {
+    background: none;
+    border: none;
+    color: #8e8ea0;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.chat-action-btn:hover {
+    background: #40414f;
+    color: #ececf1;
+}
+
+.sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid #444;
+    flex-shrink: 0;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.user-info:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #10a37f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.user-name {
+    font-size: 14px;
+    color: #ececf1;
+    font-weight: 500;
+}
+
+.settings-menu-btn {
+    background: none;
+    border: none;
+    color: #8e8ea0;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.settings-menu-btn:hover {
+    background: #2d2d2d;
+    color: #ececf1;
+}
+
+.sidebar.collapsed .user-info {
+    display: none;
+}
+
+.sidebar.collapsed .settings-menu-btn {
+    width: 100%;
+    justify-content: center;
+}
+
+/* Основной контент */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #212121;
+}
+
+.chat-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #212121;
+}
+
+.chat-info h3 {
+    font-size: 18px;
+    color: #ececf1;
+    margin-bottom: 4px;
+}
+
+.chat-model {
+    font-size: 12px;
+    color: #8e8ea0;
+    background: #2d2d2d;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.chat-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.header-btn {
+    background: none;
+    border: none;
+    color: #8e8ea0;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.header-btn:hover {
+    background: #2d2d2d;
+    color: #ececf1;
+}
+
+.chat-container {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+}
+
+.chat-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 3px;
+}
+
+/* Экран приветствия */
+.welcome-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 40px;
+}
+
+.welcome-content {
+    text-align: center;
+    max-width: 600px;
+}
+
+.logo {
+    font-size: 48px;
+    color: #10a37f;
+    margin-bottom: 24px;
+}
+
+.welcome-content h1 {
+    font-size: 32px;
+    color: #ececf1;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.welcome-content p {
+    font-size: 16px;
+    color: #8e8ea0;
+    margin-bottom: 40px;
+}
+
+.example-prompts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-top: 40px;
+}
+
+.prompt-card {
+    padding: 20px;
+    background: #2d2d2d;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+}
+
+.prompt-card:hover {
+    background: #343541;
+    transform: translateY(-2px);
+}
+
+.prompt-card i {
+    font-size: 20px;
+    color: #10a37f;
+}
+
+.prompt-card span {
+    color: #ececf1;
+    font-size: 14px;
+}
+
+/* Сообщения */
+.messages-container {
+    padding: 20px;
+}
+
+.message {
+    margin-bottom: 24px;
+    display: flex;
+    gap: 16px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.message.user {
+    flex-direction: row-reverse;
+}
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.message.user .message-avatar {
+    background: #10a37f;
+    color: white;
+}
+
+.message.assistant .message-avatar {
+    background: #444;
+    color: #ececf1;
+}
+
+.message-content {
+    flex: 1;
+    background: #2d2d2d;
+    padding: 16px 20px;
+    border-radius: 16px;
+    color: #ececf1;
+    line-height: 1.6;
+    position: relative;
+}
+
+.message.user .message-content {
+    background: #10a37f;
+    color: white;
+}
+
+.message-content pre {
+    background: #1a1a1a;
+    padding: 12px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 12px 0;
+    border: 1px solid #333;
+}
+
+.message-content code {
+    background: #1a1a1a;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Consolas', monospace;
+}
+
+/* Улучшенные стили для форматирования */
+.message-content .code-block {
+    margin: 16px 0;
+    border-radius: 8px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    overflow: hidden;
+}
+
+.message-content .code-block pre {
+    margin: 0;
+    padding: 16px;
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.message-content .code-block code {
+    background: transparent;
+    padding: 0;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+    font-size: 14px;
+}
+
+.message-content .inline-code {
+    background: #2a2a2a;
+    color: #e6db74;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-size: 0.9em;
+    border: 1px solid #444;
+}
+
+/* Заголовки */
+.message-content h1 {
+    font-size: 1.8em;
+    font-weight: 700;
+    margin: 20px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #10a37f;
+    color: #ececf1;
+}
+
+.message-content h2 {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin: 18px 0 10px;
+    color: #ececf1;
+}
+
+.message-content h3 {
+    font-size: 1.3em;
+    font-weight: 600;
+    margin: 16px 0 8px;
+    color: #ececf1;
+}
+
+/* Улучшенные стили для списков */
+.message-content ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 12px 0;
+}
+
+.message-content ul li {
+    position: relative;
+    padding-left: 20px;
+    margin: 6px 0;
+    line-height: 1.5;
+}
+
+.message-content ul li::before {
+    content: "•";
+    color: #10a37f;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.message-content ol {
+    padding-left: 20px;
+    margin: 12px 0;
+}
+
+.message-content ol li {
+    margin: 6px 0;
+    line-height: 1.5;
+}
+
+.message-content .numbered-item {
+    list-style-type: decimal;
+    margin-left: 20px;
+}
+
+/* Цитаты */
+.message-content blockquote {
+    border-left: 4px solid #10a37f;
+    padding: 12px 16px;
+    margin: 16px 0;
+    background: #2a2a2a;
+    border-radius: 0 8px 8px 0;
+    color: #b4b4b4;
+    font-style: italic;
+    position: relative;
+}
+
+.message-content blockquote::before {
+    content: '"';
+    font-size: 2em;
+    color: #10a37f;
+    position: absolute;
+    top: -5px;
+    left: 8px;
+    opacity: 0.5;
+}
+
+/* Таблицы */
+.message-content .markdown-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    background: #2a2a2a;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #444;
+}
+
+.message-content .markdown-table th {
+    background: #343541;
+    color: #ececf1;
+    font-weight: 600;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #10a37f;
+}
+
+.message-content .markdown-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #444;
+}
+
+.message-content .markdown-table tr:last-child td {
+    border-bottom: none;
+}
+
+.message-content .markdown-table tr:hover {
+    background: #333;
+}
+
+/* Горизонтальные линии-разделители */
+.message-content hr.separator {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #10a37f, transparent);
+    margin: 20px 0;
+    opacity: 0.6;
+}
+
+.message-content hr.separator-thick {
+    border: none;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #10a37f, transparent);
+    margin: 24px 0;
+    opacity: 0.8;
+}
+
+.message-content hr.separator-dashed {
+    border: none;
+    height: 0;
+    border-top: 2px dashed #10a37f;
+    margin: 20px 0;
+    opacity: 0.6;
+}
+
+.message-content hr.separator-dotted {
+    border: none;
+    height: 0;
+    border-top: 2px dotted #10a37f;
+    margin: 20px 0;
+    opacity: 0.6;
+}
+
+/* Классическая горизонтальная линия (по умолчанию) */
+.message-content hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #10a37f, transparent);
+    margin: 20px 0;
+    border-radius: 1px;
+}
+
+/* Зачеркнутый текст */
+.message-content del {
+    color: #888;
+    text-decoration: line-through;
+}
+
+/* Жирный и курсив */
+.message-content strong {
+    font-weight: 700;
+    color: #fff;
+}
+
+.message-content em {
+    font-style: italic;
+    color: #e6e6e6;
+}
+
+/* Подчеркнутый текст */
+.message-content u {
+    text-decoration: underline;
+    text-decoration-color: #10a37f;
+    text-underline-offset: 2px;
+    color: #e6e6e6;
+}
+
+/* Выделенный текст (маркер) */
+.message-content mark {
+    background: linear-gradient(90deg, rgba(16, 163, 127, 0.3), rgba(16, 163, 127, 0.5));
+    color: #fff;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+/* Верхние и нижние индексы */
+.message-content sup {
+    font-size: 0.8em;
+    vertical-align: super;
+    line-height: 0;
+    color: #b4b4b4;
+}
+
+.message-content sub {
+    font-size: 0.8em;
+    vertical-align: sub;
+    line-height: 0;
+    color: #b4b4b4;
+}
+
+/* Ссылки */
+.message-content a {
+    color: #10a37f;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.message-content a:hover {
+    color: #0d8268;
+    border-bottom-color: #0d8268;
+    text-decoration: none;
+}
+
+.message-actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: none;
+    gap: 4px;
+}
+
+.message-content:hover .message-actions {
+    display: flex;
+}
+
+.message-action-btn {
+    background: rgba(0, 0, 0, 0.3);
+    border: none;
+    color: #ececf1;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+.message-action-btn:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Кнопка сохранения в Notion */
+.save-to-notion-btn {
+    background: rgba(0, 0, 0, 0.3);
+    border: none;
+    color: #ececf1;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.save-to-notion-btn:hover {
+    background: rgba(37, 38, 43, 0.8);
+    color: #fff;
+}
+
+.save-to-notion-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.save-to-notion-btn:disabled:hover {
+    background: rgba(0, 0, 0, 0.3);
+    color: #ececf1;
+}
+
+/* Лого Notion */
+.notion-logo {
+    width: 12px;
+    height: 12px;
+    background: #000;
+    border-radius: 2px;
+    position: relative;
+    display: inline-block;
+}
+
+.notion-logo::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    background: #fff;
+    border-radius: 1px;
+}
+
+/* Анимация загрузки для кнопки Notion */
+.save-to-notion-btn.loading {
+    pointer-events: none;
+}
+
+.save-to-notion-btn.loading i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Свайп-индикаторы для сообщений */
+.swipe-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    opacity: 0.9;
+    z-index: 10;
+    animation: swipeIndicatorPulse 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes swipeIndicatorPulse {
+    0% {
+        transform: translateY(-50%) scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: translateY(-50%) scale(1.1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(-50%) scale(1);
+        opacity: 0.9;
+    }
+}
+
+/* Уведомления о действиях свайпа */
+.swipe-action-notification {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    border-radius: 16px;
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 20;
+    animation: swipeNotificationSlide 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes swipeNotificationSlide {
+    0% {
+        transform: translateX(-50%) translateY(-15px) scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: translateX(-50%) translateY(-5px) scale(1.05);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateX(-50%) translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Поле ввода */
+.input-container {
+    padding: 20px 24px;
+    border-top: 1px solid #444;
+    background: #212121;
+    transition: all 0.2s ease;
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
+}
+
+/* Эффект поднятия при фокусе */
+.input-container:focus-within {
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.input-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    background: #2d2d2d;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 12px;
+    min-height: 48px;
+    transition: all 0.2s ease;
+}
+
+.input-wrapper:focus-within {
+    background: #343541;
+    box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.3);
+    align-items: flex-end;
+}
+
+#messageInput {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #ececf1;
+    font-size: 16px;
+    resize: none;
+    outline: none;
+    min-height: 24px;
+    max-height: 200px;
+    line-height: 1.5;
+    overflow-y: auto;
+    transition: height 0.2s ease;
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+    font-family: inherit;
+    box-sizing: content-box;
+}
+
+#messageInput::-webkit-scrollbar {
+    width: 6px;
+}
+
+#messageInput::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#messageInput::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 3px;
+}
+
+#messageInput::placeholder {
+    color: #8e8ea0;
+}
+
+.send-btn {
+    background: #10a37f;
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.send-btn:disabled {
+    background: #444;
+    cursor: not-allowed;
+}
+
+.send-btn:not(:disabled):hover {
+    background: #0d8268;
+}
+
+/* Контейнер для кнопок в input-wrapper */
+.input-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Кнопка загрузки файла */
+.file-btn {
+    background: #444;
+    border: none;
+    color: #ececf1;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.file-btn:hover {
+    background: #555;
+    color: #10a37f;
+}
+
+/* Кнопка генерации изображения */
+.generate-image-btn {
+    background: #444;
+    border: none;
+    color: #ececf1;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    margin-left: 4px;
+}
+
+.generate-image-btn:hover {
+    background: #555;
+    color: #10a37f;
+}
+
+.generate-image-btn:disabled {
+    background: #333;
+    color: #666;
+    cursor: not-allowed;
+}
+
+/* Выпадающее меню для действий с изображениями */
+.image-actions-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.image-actions-btn {
+    background: #444;
+    border: none;
+    color: #ececf1;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    position: relative;
+    gap: 2px;
+}
+
+.image-actions-btn:hover {
+    background: #555;
+    color: #10a37f;
+}
+
+.image-actions-btn.active,
+.image-actions-btn:hover {
+    background: #555;
+}
+
+.dropdown-arrow {
+    font-size: 8px;
+    margin-left: 2px;
+    transition: transform 0.2s;
+}
+
+.image-actions-btn.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.image-actions-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #2d2d2d;
+    border: 1px solid #444;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+    min-width: 180px;
+    margin-top: 4px;
+}
+
+.image-actions-menu.open-upward {
+    top: auto;
+    bottom: 100%;
+    margin-top: 0;
+    margin-bottom: 4px;
+    transform: translateY(10px);
+}
+
+.image-actions-menu.open-upward.show {
+    transform: translateY(0);
+}
+
+.image-actions-menu.align-right {
+    left: auto;
+    right: 0;
+}
+
+/* Дополнительная защита от выхода за границы экрана */
+@media (max-width: 480px) {
+    .image-actions-menu {
+        max-width: calc(100vw - 40px);
+        right: 10px;
+        left: 10px;
+        min-width: auto;
+    }
+    
+    .image-actions-menu.align-right {
+        right: 10px;
+        left: auto;
+    }
+}
+
+.image-actions-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.image-actions-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    color: #ececf1;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.image-actions-item:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.image-actions-item:last-child {
+    border-radius: 0 0 8px 8px;
+}
+
+.image-actions-item:hover {
+    background: #3a3a3a;
+    color: #10a37f;
+}
+
+.image-actions-item.generating {
+    background: #10a37f;
+    color: white;
+    cursor: not-allowed;
+}
+
+.image-actions-item.generating:hover {
+    background: #10a37f;
+    color: white;
+}
+
+.image-actions-item.generating i {
+    animation: spin 1s linear infinite;
+}
+
+.image-actions-item i {
+    width: 16px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.image-actions-item span {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.generate-image-btn.generating {
+    background: #10a37f;
+    color: white;
+}
+
+.generate-image-btn.generating i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Предварительный просмотр файла */
+.file-preview {
+    max-width: 800px;
+    margin: 0 auto 12px;
+    background: #2d2d2d;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #444;
+}
+
+.file-preview-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+}
+
+#previewImage {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #555;
+}
+
+.file-preview-info {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#fileName {
+    color: #ececf1;
+    font-size: 14px;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.remove-file-btn {
+    background: #444;
+    border: none;
+    color: #ececf1;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 12px;
+}
+
+.remove-file-btn:hover {
+    background: #e74c3c;
+    color: white;
+}
+
+.input-footer {
+    max-width: 800px;
+    margin: 8px auto 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #8e8ea0;
+    gap: 16px;
+}
+
+.footer-left,
+.footer-right {
+    flex: 1;
+}
+
+.footer-center {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+}
+
+.model-selector {
+    position: relative;
+}
+
+.model-select {
+    background: #2d2d2d;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #ececf1;
+    padding: 6px 12px;
+    font-size: 12px;
+    min-width: 160px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.model-select:hover {
+    border-color: #10a37f;
+    background: #333;
+}
+
+.model-select:focus {
+    outline: none;
+    border-color: #10a37f;
+    box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.2);
+}
+
+.model-info {
+    font-size: 11px;
+    color: #10a37f;
+    text-align: right;
+    font-weight: 500;
+}
+
+.char-counter {
+    font-size: 11px;
+}
+
+.model-info {
+    font-size: 11px;
+    color: #666;
+    text-align: right;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .input-footer {
+        font-size: 11px;
+        gap: 8px;
+    }
+    
+    .model-select {
+        min-width: 120px;
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    
+    .footer-center {
+        flex: 1.5;
+    }
+}
+
+/* Модальное окно статистики */
+.stats-modal {
+    width: 500px;
+    max-width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.stats-summary {
+    text-align: center;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid #333;
+}
+
+.summary-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #10a37f, #0d8268);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    flex-shrink: 0;
+    animation: atomSpin 3s linear infinite;
+}
+
+@keyframes atomSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.summary-info {
+    flex: 1;
+    text-align: left;
+}
+
+.summary-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #ececf1;
+    margin-bottom: 8px;
+}
+
+.summary-stats {
+    font-size: 14px;
+    color: #8e8ea0;
+}
+
+.progress-section {
+    margin-bottom: 24px;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.progress-header span:first-child {
+    font-size: 16px;
+    font-weight: 500;
+    color: #ececf1;
+}
+
+.progress-percentage {
+    font-size: 16px;
+    font-weight: 600;
+    color: #10a37f;
+}
+
+.progress-bar {
+    position: relative;
+    height: 24px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    border: 1px solid #333;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10a37f, #0d8268, #10a37f);
+    background-size: 200% 100%;
+    border-radius: 12px;
+    transition: width 1s ease;
+    animation: progressShine 2s linear infinite;
+    position: relative;
+}
+
+@keyframes progressShine {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.progress-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, rgba(16, 163, 127, 0.3), transparent);
+    border-radius: 12px;
+    opacity: 0;
+    animation: progressGlow 3s ease-in-out infinite;
+}
+
+@keyframes progressGlow {
+    0%, 100% { opacity: 0; transform: translateX(-100%); }
+    50% { opacity: 1; transform: translateX(100%); }
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #8e8ea0;
+}
+
+.achievement-section {
+    margin-top: 24px;
+}
+
+.achievement-section h4 {
+    color: #ececf1;
+    margin-bottom: 16px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-height: none;
+    overflow: visible;
+}
+
+.achievement {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid #333;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.achievement:hover {
+    transform: translateY(-2px);
+    border-color: #555;
+}
+
+.achievement.locked {
+    background: #0f0f0f;
+    border-color: #222;
+    opacity: 0.5;
+}
+
+.achievement.locked:hover {
+    opacity: 0.7;
+}
+
+.achievement.locked .achievement-icon {
+    color: #444;
+}
+
+.achievement.locked .achievement-name,
+.achievement.locked .achievement-desc {
+    color: #555;
+}
+
+.achievement.unlocked {
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    border-color: #10a37f;
+    box-shadow: 0 0 20px rgba(16, 163, 127, 0.2);
+}
+
+.achievement.unlocked::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(16, 163, 127, 0.1), transparent);
+    animation: achievementShine 3s linear infinite;
+}
+
+@keyframes achievementShine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.achievement-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: #8e8ea0;
+    transition: color 0.2s;
+}
+
+.achievement.unlocked .achievement-icon {
+    color: #10a37f;
+}
+
+.achievement-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: #ececf1;
+    margin-bottom: 4px;
+}
+
+.achievement-desc {
+    font-size: 10px;
+    color: #8e8ea0;
+}
+
+/* Модальное окно описания достижения */
+.achievement-modal {
+    max-width: 500px;
+    width: 90%;
+}
+
+.achievement-detail {
+    padding: 20px 0;
+}
+
+.achievement-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, rgba(16, 163, 127, 0.1), rgba(16, 163, 127, 0.05));
+    border-radius: 8px;
+    border: 1px solid rgba(16, 163, 127, 0.3);
+}
+
+.achievement-status.locked {
+    background: linear-gradient(135deg, rgba(138, 142, 160, 0.1), rgba(138, 142, 160, 0.05));
+    border-color: rgba(138, 142, 160, 0.3);
+}
+
+.achievement-status i {
+    color: #10a37f;
+    font-size: 18px;
+}
+
+.achievement-status.locked i {
+    color: #8e8ea0;
+}
+
+.achievement-status span {
+    color: #10a37f;
+    font-weight: 500;
+}
+
+.achievement-status.locked span {
+    color: #8e8ea0;
+}
+
+.achievement-description {
+    margin-bottom: 20px;
+}
+
+.achievement-description h4 {
+    color: #ececf1;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.achievement-description p {
+    color: #b4b4b4;
+    line-height: 1.5;
+}
+
+.achievement-progress {
+    margin-bottom: 16px;
+}
+
+.achievement-progress h4 {
+    color: #ececf1;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.progress-bar.small {
+    height: 8px;
+    margin-bottom: 8px;
+}
+
+#achievementProgressText {
+    color: #8e8ea0;
+    font-size: 12px;
+}
+
+/* Мобильное контекстное меню для чатов */
+.mobile-context-menu {
+    position: fixed;
+    background: #2d2d2d;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    z-index: 1002;
+    display: none;
+    min-width: 160px;
+}
+
+.mobile-context-menu.active {
+    display: block;
+}
+
+.context-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #ececf1;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.context-menu-item:hover {
+    background: #343541;
+}
+
+.context-menu-item.danger {
+    color: #ff6b6b;
+}
+
+.context-menu-item.danger:hover {
+    background: rgba(255, 107, 107, 0.1);
+}
+
+/* Анимация длительного нажатия */
+.chat-item.long-pressing {
+    transform: scale(0.98);
+    background: #343541;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Модальное окно */
+.modal-overlay {
+    display: none; /* Изначально скрыто */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* Добавляем курсор для указания возможности клика */
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.modal-overlay.show,
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal {
+    background: #2d2d2d;
+    border-radius: 12px;
+    width: 400px;
+    max-width: 90vw;
+    cursor: default; /* Убираем курсор с самого модального окна */
+    transform: scale(0.9);
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+.modal-overlay.show .modal,
+.modal-overlay.active .modal {
+    transform: scale(1);
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.modal-header h3 {
+    color: #ececf1;
+    font-size: 18px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: #8e8ea0;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: #444;
+    color: #ececf1;
+}
+
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+.modal-body input {
+    width: 100%;
+    background: #171717;
+    border: 1px solid #444;
+    color: #ececf1;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+}
+
+.modal-body input:focus {
+    border-color: #10a37f;
+}
+
+.modal-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #444;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: #10a37f;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0d8268;
+}
+
+.btn-secondary {
+    background: #444;
+    color: #ececf1;
+}
+
+.btn-secondary:hover {
+    background: #555;
+}
+
+/* Индикатор печати */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    color: #8e8ea0;
+    font-size: 14px;
+}
+
+.typing-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.typing-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10a37f;
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.typing-dots span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes typing {
+    0%, 80%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    40% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Мобильная кнопка меню */
+.mobile-menu-btn {
+    display: none;
+    width: 40px;
+    height: 40px;
+    background: #2d2d2d;
+    border-radius: 8px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    color: #ececf1;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    margin-right: 12px;
+}
+
+.mobile-menu-btn:hover {
+    background: #343541;
+}
+
+.mobile-menu-btn:active {
+    transform: scale(0.95);
+}
+
+/* Скрытие кнопки когда меню открыто */
+.mobile-menu-open .mobile-menu-btn {
+    display: none;
+}
+
+/* Мобильное меню */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    /* Показываем мобильную кнопку меню */
+    .mobile-menu-btn {
+        display: flex;
+    }
+    
+    /* Скрываем обычную кнопку в сайдбаре */
+    .sidebar-toggle {
+        display: none;
+    }
+    
+    /* Обновляем хедер для мобильных */
+    .chat-header {
+        display: flex;
+        align-items: center;
+    }
+    
+    .chat-info {
+        flex: 1;
+    }
+    
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        height: calc(var(--vh, 1vh) * 100);
+        width: 240px; /* Уменьшено до 240px чтобы оставить место справа */
+        z-index: 1000;
+        transform: translateX(-240px); /* Используем transform вместо left */
+        transition: transform 0.3s ease;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        box-sizing: border-box;
+        overflow-y: hidden; /* Отключаем скролл самого сайдбара */
+    }
+    
+    .sidebar.mobile-open {
+        transform: translateX(0); /* Показываем сайдбар */
+    }
+    
+    .sidebar.collapsed {
+        transform: translateX(-240px); /* Скрываем сайдбар */
+        width: 240px;
+    }
+    
+    .sidebar.collapsed .sidebar-text {
+        display: block;
+    }
+    
+    .sidebar.collapsed .chat-item-actions {
+        display: none;
+    }
+    
+    .sidebar.collapsed .chat-item:hover .chat-item-actions {
+        display: none; /* Отключаем в мобильной версии */
+    }
+    
+    /* Убеждаемся, что footer виден на мобильных */
+    .sidebar-footer {
+        background: #171717;
+        flex-shrink: 0;
+        margin-top: auto;
+    }
+    
+    .chat-list {
+        /* Позволяем списку чатов занимать доступное пространство */
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0; /* Важно для flex элементов */
+    }
+    
+    .main-content {
+        width: 100%;
+        margin-left: 0;
+    }
+    
+    .example-prompts {
+        grid-template-columns: 1fr;
+    }
+    
+    .message {
+        margin-bottom: 16px;
+        gap: 12px;
+    }
+    
+    .message-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .input-container {
+        padding: 16px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #212121;
+        border-top: 1px solid #444;
+        z-index: 900;
+        /* Учитываем безопасную зону для iPhone */
+        padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    }
+    
+    .main-content {
+        /* Добавляем отступ снизу для поля ввода */
+        padding-bottom: 90px;
+    }
+    
+    .chat-container {
+        /* Убираем flex чтобы контент мог прокручиваться */
+        height: auto;
+        min-height: calc(100vh - 180px);
+        min-height: calc(calc(var(--vh, 1vh) * 100) - 180px);
+        overflow-y: auto;
+        padding-bottom: 20px;
+    }
+    
+    .input-wrapper {
+        border-radius: 20px;
+        padding: 10px 14px;
+        min-height: 44px;
+    }
+    
+    #messageInput {
+        font-size: 16px; /* Предотвращает зум на iOS */
+        max-height: 150px; /* Уменьшено для мобильных */
+    }
+    
+    .send-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .modal {
+        width: 340px;
+    }
+    
+    .stats-modal {
+        width: 95vw;
+        height: 80vh;
+    }
+    
+    .summary-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        padding: 20px;
+    }
+    
+    .summary-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .summary-info {
+        text-align: center;
+    }
+    
+    .achievements-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .achievement {
+        padding: 12px;
+    }
+    
+    .achievement-icon {
+        font-size: 20px;
+    }
+    
+    /* Специальные стили для мобильного overlay */
+    .sidebar-overlay.active {
+        background: rgba(0, 0, 0, 0.3); /* Полупрозрачный фон */
+    }
+}
+
+@media (min-width: 769px) {
+    .sidebar-overlay {
+        display: none !important;
+    }
+}
+
+/* Плавная прокрутка */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Выделение текста */
+::selection {
+    background: #10a37f;
+    color: white;
+}
+
+/* Анимации */
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.3s ease-out;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Дополнительные стили для кода */
+.message-content h1, .message-content h2, .message-content h3,
+.message-content h4, .message-content h5, .message-content h6 {
+    margin: 16px 0 8px;
+    color: #ececf1;
+}
+
+.message-content p {
+    margin: 8px 0;
+}
+
+.message-content ul, .message-content ol {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.message-content li {
+    margin: 4px 0;
+}
+
+.message-content blockquote {
+    border-left: 4px solid #10a37f;
+    padding-left: 16px;
+    margin: 16px 0;
+    color: #b4b4b4;
+    font-style: italic;
+}
+
+.message-content a {
+    color: #10a37f;
+    text-decoration: none;
+}
+
+.message-content a:hover {
+    text-decoration: underline;
+}
+
+/* Стили для таблиц */
+.message-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+}
+
+.message-content th,
+.message-content td {
+    border: 1px solid #444;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.message-content th {
+    background: #343541;
+    font-weight: 600;
+}
+
+/* Стили для изображений в сообщениях */
+.message-image {
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 8px;
+    margin: 8px 0;
+    cursor: pointer;
+    border: 1px solid #444;
+    transition: all 0.2s ease;
+}
+
+.message-image:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Анимация появления сообщений */
+.message-appear {
+    animation: messageAppear 0.4s ease-out;
+}
+
+@keyframes messageAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Стили для кнопок действий сообщений */
+.message-actions {
+    display: none;
+    gap: 4px;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+.message.user .message-actions {
+    flex-direction: row-reverse;
+}
+
+.message-content:hover .message-actions {
+    display: flex;
+}
+
+.message-action-btn {
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: #ececf1;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    transition: all 0.2s;
+    min-width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.message-action-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.05);
+}
+
+.message.user .message-action-btn {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.message.user .message-action-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Специальные стили для кнопки Notion */
+.notion-save-btn {
+    color: #10a37f !important;
+    transition: all 0.2s ease;
+}
+
+.notion-save-btn:hover {
+    color: #ffffff !important;
+    background: #10a37f !important;
+    transform: scale(1.05);
+}
+
+.notion-save-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.notion-save-btn:disabled:hover {
+    transform: none;
+    background: rgba(0, 0, 0, 0.6) !important;
+    color: #888 !important;
+}
+
+/* Стили для inline редактирования */
+.message-edit-form {
+    display: none;
+    width: 100%;
+}
+
+.message-edit-textarea {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid #10a37f;
+    border-radius: 8px;
+    padding: 12px;
+    color: #ececf1;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.2);
+}
+
+.message-edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    justify-content: flex-end;
+}
+
+.message-edit-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.message-edit-save {
+    background: #10a37f;
+    color: white;
+}
+
+.message-edit-save:hover {
+    background: #0d8268;
+}
+
+.message-edit-cancel {
+    background: #666;
+    color: white;
+}
+
+.message-edit-cancel:hover {
+    background: #555;
+}
+
+.message.editing .message-content-text {
+    display: none;
+}
+
+.message.editing .message-edit-form {
+    display: block;
+}
+
+.message.editing .message-actions {
+    display: none;
+}
+
+/* Стили для паузы и продолжения */
+.pause-continue-section {
+    max-width: 800px;
+    margin: 0 auto 16px;
+    background: #2d2d2d;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #444;
+}
+
+.pause-message {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ffd700;
+    font-weight: 500;
+}
+
+.pause-message i {
+    font-size: 18px;
+}
+
+.pause-btn {
+    background: #10a37f;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+}
+
+.pause-btn:hover {
+    background: #0d8268;
+    transform: scale(1.05);
+}
+
+.pause-btn:active {
+    transform: scale(0.95);
+}
+
+/* Состояния кнопки отправки */
+.send-btn.pause-mode {
+    background: #ff6b6b;
+}
+
+.send-btn.pause-mode:hover {
+    background: #ff5252;
+}
+
+.send-btn.pause-mode i:before {
+    content: "\f04c"; /* Иконка паузы */
+}
+
+/* Стили для генерации изображений */
+.image-generation-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #10a37f;
+    font-style: italic;
+}
+
+.image-generation-progress i {
+    color: #10a37f;
+}
+
+/* Вращение для FontAwesome иконок */
+.fa-spin {
+    animation: fa-spin 1s infinite linear;
+}
+
+@keyframes fa-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Сгенерированные изображения */
+.message-content .generated-image {
+    border: 2px solid #22c55e;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.message-content .generated-image img {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.message-content .generated-badge {
+    display: inline-block;
+    background: #ff6b35;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+/* Улучшенные стили для изображений в сообщениях */
+.message-image {
+    margin: 8px 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.message-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.message-image img:hover {
+    transform: scale(1.02);
+}
+
+#continueGenerationBtn {
+    background: #10a37f;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#continueGenerationBtn:hover {
+    background: #0d8268;
+    transform: translateY(-1px);
+}
+
+/* Стили для статусов сообщений */
+.message-status {
+    font-size: 11px;
+    color: #888;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.message-status.paused {
+    color: #ffd700;
+}
+
+.message-status.editing {
+    color: #10a37f;
+}
+
+.image-modal {
+    background: transparent;
+    border-radius: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    cursor: default; /* Убираем курсор с самого контента */
+    transform: scale(0.9);
+    transition: transform 0.2s ease;
+}
+
+/* Специальные стили для модального окна изображений - блокировка прокрутки */
+#imageModal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+    touch-action: none !important;
+    -webkit-overflow-scrolling: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+#imageModal.active .image-modal,
+#imageModal.show .image-modal {
+    transform: scale(1);
+}
+
+.image-modal-header {
+    position: absolute;
+    top: max(30px, env(safe-area-inset-top, 30px) + 30px);
+    right: max(30px, env(safe-area-inset-right, 30px) + 30px);
+    z-index: 1002;
+    /* Убеждаемся, что кнопка не выходит за пределы экрана */
+    min-width: 44px;
+    min-height: 44px;
+}
+
+.image-modal-header .modal-close {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #fff;
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+}
+
+.image-modal-header .modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.image-modal-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 40px; /* Симметричные отступы */
+    cursor: pointer; /* Возможность закрытия по клику */
+    min-height: 0;
+    /* Убеждаемся, что контент помещается в экран */
+    overflow: hidden; /* Скрываем части увеличенного изображения */
+    /* Дополнительная гарантия центрирования */
+    text-align: center;
+    /* Поддержка зума и панорамирования */
+    position: relative;
+    touch-action: none; /* Отключаем стандартные жесты для полного контроля */
+    /* Ограничиваем область для зума */
+    width: 100%;
+    height: 100%;
+}
+
+.image-modal-body img {
+    max-width: 85vw; /* Уменьшили чтобы точно поместилось */
+    max-height: calc(100vh - 200px); /* Увеличили отступ для элементов */
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    transition: transform 0.1s ease-out; /* Быстрее для лучшего отклика на жесты */
+    cursor: grab; /* Указываем, что изображение можно перетаскивать */
+    /* Дополнительная гарантия центрирования */
+    display: block;
+    margin: 0 auto;
+    /* Поддержка зума - изображение увеличивается в своих границах */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    transform-origin: center center; /* Зум относительно центра самого изображения */
+    will-change: transform; /* Оптимизация для трансформаций */
+    position: relative; /* Для правильного позиционирования при зуме */
+}
+
+.image-modal-body img:active {
+    cursor: grabbing;
+}
+
+.image-modal-body img.zoomed:hover {
+    transform: none; /* Отключаем hover эффект когда изображение увеличено */
+}
+
+.image-modal-footer {
+    position: absolute;
+    bottom: max(30px, env(safe-area-inset-bottom, 30px) + 30px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1002;
+    /* Убеждаемся, что текст не выходит за пределы экрана */
+    max-width: calc(100vw - 60px);
+    text-align: center;
+}
+
+.image-modal-footer p {
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    margin: 0;
+}
+
+/* Специальные стили для изображений в чате с возможностью клика */
+.message-image img,
+.generated-image img {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.message-image img:hover,
+.generated-image img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Мобильные стили для модального окна изображения */
+@media (max-width: 768px) {
+    /* Специальные стили для изображений в чате на мобильных */
+    .message-content .generated-image img,
+    .message-image img {
+        max-width: 100%;
+        width: auto !important;
+        height: auto;
+        max-height: 70vh;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+    
+    .message-content .generated-image,
+    .message-image {
+        max-width: 100%;
+        overflow: hidden;
+    }
+    
+    /* Обеспечиваем правильное поведение контейнеров сообщений */
+    .message {
+        max-width: 100%;
+        overflow: hidden;
+    }
+    
+    .message-content {
+        max-width: 100%;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        overflow: hidden;
+    }
+    
+    .image-modal-header {
+        top: max(40px, env(safe-area-inset-top, 40px) + 40px);
+        right: max(20px, env(safe-area-inset-right, 20px) + 20px);
+        /* Дополнительная защита от выхода за границы */
+        position: fixed;
+    }
+    
+    .image-modal-header .modal-close {
+        width: 44px; /* Увеличили размер кнопки */
+        height: 44px;
+        font-size: 18px;
+        /* Убеждаемся, что кнопка видна */
+        background: rgba(0, 0, 0, 0.9);
+        border: 2px solid #fff;
+    }
+    
+    .image-modal-body {
+        padding: calc(80px + env(safe-area-inset-top, 0px)) 15px calc(80px + env(safe-area-inset-bottom, 0px)); /* Увеличили отступы для мобильных */
+        /* Дополнительная защита от переполнения */
+        max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 160px);
+        overflow: hidden;
+        /* Усиленное центрирование на мобильных */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .image-modal-body img {
+        max-width: 90vw;
+        max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 160px); /* Учитываем место для кнопки и текста */
+        object-fit: contain;
+        /* Дополнительное центрирование на мобильных */
+        display: block;
+        margin: 0 auto;
+    }
+    
+    .image-modal-footer {
+        bottom: max(40px, env(safe-area-inset-bottom, 40px) + 40px);
+        /* Дополнительная защита от выхода за границы */
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: calc(100vw - 40px);
+    }
+    
+    .image-modal-footer p {
+        font-size: 13px; /* Увеличили размер шрифта */
+        padding: 8px 16px; /* Увеличили отступы */
+        /* Улучшенная читаемость на мобильных */
+        background: rgba(0, 0, 0, 0.9);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border-radius: 20px;
+    }
+    
+    /* Мобильные стили для свайп-индикаторов сообщений */
+    .swipe-indicator {
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        animation: swipeIndicatorPulse 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    .swipe-action-notification {
+        font-size: 14px;
+        padding: 8px 16px;
+        top: -40px;
+        animation: swipeNotificationSlide 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    /* Улучшенная видимость сообщений при свайпе */
+    .message {
+        position: relative;
+        overflow: visible; /* Позволяем индикаторам выходить за границы */
+        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    .message-content {
+        position: relative;
+        z-index: 1;
+        transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+}
+
+/* Стили для настроек */
+.setting-item {
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid #333;
+    transition: all 0.2s ease;
+}
+
+.setting-item:hover {
+    transform: translateY(-1px);
+    border-color: #555;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.setting-item:last-child {
+    margin-bottom: 0;
+}
+
+.setting-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.setting-icon.email {
+    background: linear-gradient(135deg, #10a37f, #0d8268);
+    color: white;
+}
+
+.setting-icon.google {
+    background: linear-gradient(135deg, #10a37f, #0d8268);
+    color: white;
+}
+
+.setting-icon.data {
+    background: linear-gradient(135deg, #10a37f, #0d8268);
+    color: white;
+}
+
+.setting-icon.font-size {
+    background: linear-gradient(135deg, #10a37f, #0d8268);
+    color: white;
+}
+
+.setting-icon.version {
+    background: linear-gradient(135deg, #10a37f, #0d8268);
+    color: white;
+}
+
+.setting-icon.legal {
+    background: linear-gradient(135deg, #10a37f, #0d8268);
+    color: white;
+}
+
+.section-header {
+    margin: 20px 0 12px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #444;
+}
+
+.section-header h4 {
+    margin: 0;
+    color: #ececf1;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.section-header:first-child {
+    margin-top: 0;
+}
+
+.font-size-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.font-settings-btn {
+    background: #10a37f;
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.font-settings-btn:hover {
+    background: #0d8268;
+    transform: translateY(-1px);
+}
+
+/* Font Settings Modal */
+.font-preview-container {
+    margin-bottom: 24px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid #333;
+}
+
+.font-preview-container .message {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.font-preview-container .message:last-child {
+    margin-bottom: 0;
+}
+
+.font-preview-container .user-message {
+    align-items: flex-end;
+}
+
+.font-preview-container .ai-message {
+    align-items: flex-start;
+}
+
+.font-preview-container .message-content {
+    max-width: 70%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: inherit !important; /* Принудительно наследуем размер шрифта */
+    line-height: 1.4 !important;
+}
+
+.font-preview-container .message-content p {
+    font-size: inherit !important; /* И для параграфов тоже */
+    line-height: inherit !important;
+    margin: 0;
+}
+
+.font-preview-container .message-content * {
+    font-size: inherit !important; /* Для всех вложенных элементов */
+    line-height: inherit !important;
+}
+
+.font-preview-container .user-message .message-content {
+    background: #10a37f;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.font-preview-container .ai-message .message-content {
+    background: #2d2d2d;
+    color: #ececf1;
+    border-bottom-left-radius: 4px;
+    border: 1px solid #444;
+}
+
+.font-slider-container {
+    margin-bottom: 16px;
+}
+
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.slider-label {
+    color: #ececf1;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.slider-value {
+    color: #10a37f;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.slider-wrapper {
+    position: relative;
+}
+
+.font-slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #333;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    margin-bottom: 16px;
+}
+
+.font-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #10a37f;
+    cursor: pointer;
+    border: 2px solid #0d8268;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.font-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #10a37f;
+    cursor: pointer;
+    border: 2px solid #0d8268;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.slider-marks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -8px;
+}
+
+.slider-marks .mark {
+    font-size: 12px;
+    color: #8e8ea0;
+    text-align: center;
+    flex: 1;
+}
+
+.slider-marks .mark.default {
+    color: #10a37f;
+    font-weight: 500;
+}
+
+/* Data Management Modal */
+.data-section {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #444;
+}
+
+.training-setting {
+    display: flex;
+    flex-direction: column; /* Изменили на колонку */
+    gap: 12px; /* Отступ между заголовком+переключателем и описанием */
+}
+
+/* Контейнер для заголовка и переключателя */
+.training-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.training-info {
+    flex: 1;
+}
+
+.training-info h4 {
+    color: #ececf1;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 0; /* Убираем отступ, так как описание теперь отдельно */
+}
+
+.training-info p {
+    color: #8e8ea0;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    width: 100%; /* Description takes full width */
+}
+
+.training-description {
+    color: #8e8ea0;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    width: 100%; /* Description takes full width */
+}
+
+.training-toggle {
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-start; /* Выравниваем по верху, как заголовок */
+    padding-top: 2px; /* Небольшой отступ для точного выравнивания с текстом */
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+    cursor: pointer;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #444;
+    transition: 0.3s;
+    border-radius: 26px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #10a37f;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+}
+
+/* Data Action Buttons */
+.data-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.data-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+}
+
+.data-action-btn i {
+    font-size: 16px;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-chats-btn {
+    background: #444;
+    color: #ececf1;
+}
+
+.delete-chats-btn:hover {
+    background: #555;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.delete-account-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.delete-account-btn:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* Mobile adaptations */
+@media (max-width: 768px) {
+    /* Оптимизация touch-событий для свайпов */
+    .main-content {
+        touch-action: pan-y; /* Разрешаем вертикальный скролл, но контролируем горизонтальный */
+        position: relative;
+        overflow-x: hidden;
+    }
+    
+    .app-container {
+        touch-action: manipulation; /* Оптимизация для touch-устройств */
+        -webkit-touch-callout: none; /* Отключаем контекстное меню на iOS */
+        -webkit-user-select: none; /* Отключаем выделение текста во время свайпа */
+        user-select: none;
+    }
+    
+    /* Улучшение анимации сайдбара */
+    .sidebar {
+        will-change: transform; /* Оптимизация для анимаций */
+    }
+    
+    .sidebar-overlay {
+        touch-action: none; /* Блокируем все touch-события на overlay */
+        will-change: opacity;
+    }
+
+    .setting-item {
+        padding: 12px;
+        gap: 12px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+    }
+    
+    .setting-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+        border-radius: 6px;
+    }
+    
+    .setting-details h5 {
+        font-size: 14px;
+        margin-bottom: 2px;
+    }
+    
+    .setting-details p {
+        font-size: 12px;
+    }
+    
+    .section-header {
+        margin: 16px 0 8px 0;
+        padding-bottom: 4px;
+    }
+    
+    .section-header h4 {
+        font-size: 12px;
+    }
+    
+    .google-signin-btn,
+    .google-signout-btn {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+    
+    .font-settings-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+    
+    .modal {
+        margin: 10px;
+        max-height: 90vh;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .modal-body {
+        overflow-y: auto;
+        flex: 1;
+        min-height: 0;
+    }
+    
+    .modal-header,
+    .modal-footer {
+        flex-shrink: 0;
+    }
+    
+    .font-preview-container {
+        padding: 12px;
+        margin-bottom: 16px;
+    }
+    
+    .font-preview-container .message-content {
+        padding: 8px 10px;
+        font-size: 14px;
+        max-width: 85%;
+    }
+    
+    /* Data Management Modal Mobile */
+    .training-setting {
+        gap: 8px; /* Меньший отступ на мобильных */
+    }
+    
+    .training-header {
+        gap: 12px; /* Меньший отступ между заголовком и переключателем */
+    }
+    
+    .training-toggle {
+        padding-top: 0; /* Убираем отступ сверху на мобильных */
+        align-items: flex-start;
+    }
+    
+    .training-info h4 {
+        font-size: 14px;
+    }
+    
+    .training-info p {
+        font-size: 12px;
+    }
+    
+    .data-action-btn {
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+    
+    .data-action-btn i {
+        font-size: 14px;
+    }
+    
+    /* Image Actions Dropdown Mobile */
+    .image-actions-menu {
+        min-width: 160px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        border: 1px solid #555;
+    }
+    
+    .image-actions-item {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+    
+    .image-actions-item i {
+        font-size: 15px;
+    }
+    
+    /* Убеждаемся, что dropdown не выходит за пределы экрана */
+    .image-actions-menu.open-upward {
+        box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.4);
+    }
+    
+    /* Позиционирование для узких экранов */
+    .image-actions-menu.align-right {
+        transform-origin: top right;
+    }
+    
+    .image-actions-menu.align-right.open-upward {
+        transform-origin: bottom right;
+    }
+}
+
+.setting-info {
+    flex: 1;
+    text-align: left;
+}
+
+.setting-details h5 {
+    margin: 0 0 4px 0;
+    color: #ececf1;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.setting-details p {
+    margin: 0;
+    color: #8e8ea0;
+    font-size: 13px;
+}
+
+.setting-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.setting-toggle {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-right: 10px;
+}
+
+.google-signin-btn {
+    background: #10a37f;
+    border: none;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.google-signin-btn:hover {
+    background: #0d8268;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(16, 163, 127, 0.3);
+}
+
+.google-signout-btn {
+    background: #dc3545;
+    border: none;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.google-signout-btn:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.chevron-right {
+    color: #8e8ea0;
+    font-size: 14px;
+    transition: color 0.2s ease;
+}
+
+.setting-item:hover .chevron-right {
+    color: #10a37f;
+}
+
+/* Стили для юридических модальных окон */
+.legal-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px 0;
+}
+
+.legal-btn {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: #2d2d2d;
+    border: 1px solid #444;
+    border-radius: 12px;
+    color: #ececf1;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    gap: 16px;
+    width: 100%;
+}
+
+.legal-btn:hover {
+    background: #3d3d3d;
+    border-color: #10a37f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.legal-btn > i:first-child {
+    font-size: 24px;
+    color: #10a37f;
+    min-width: 24px;
+}
+
+.legal-btn-content {
+    flex: 1;
+    text-align: left;
+}
+
+.legal-btn-content h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ececf1;
+}
+
+.legal-btn-content p {
+    margin: 0;
+    font-size: 14px;
+    color: #8e8ea0;
+    line-height: 1.4;
+}
+
+.legal-btn > i:last-child {
+    font-size: 14px;
+    color: #8e8ea0;
+    transition: color 0.2s ease;
+}
+
+.legal-btn:hover > i:last-child {
+    color: #10a37f;
+}
+
+.legal-content {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.legal-last-updated {
+    text-align: center;
+    padding: 12px 20px;
+    background: #2d2d2d;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: #8e8ea0;
+}
+
+.legal-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.legal-section {
+    padding: 20px;
+    background: #2d2d2d;
+    border-radius: 12px;
+    border: none;
+}
+
+.legal-section h3 {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #10a37f;
+}
+
+.legal-section p {
+    margin: 0;
+    line-height: 1.6;
+    color: #ececf1;
+    white-space: pre-line;
+}
+
+.legal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.legal-content::-webkit-scrollbar-track {
+    background: #2d2d2d;
+    border-radius: 3px;
+}
+
+.legal-content::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 3px;
+}
+
+.legal-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Мобильные стили для юридических модальных окон */
+@media (max-width: 768px) {
+    .legal-btn {
+        padding: 16px;
+        border: none;
+        gap: 12px;
+    }
+
+    .legal-btn > i:first-child {
+        font-size: 20px;
+    }
+
+    .legal-btn-content h4 {
+        font-size: 15px;
+    }
+
+    .legal-btn-content p {
+        font-size: 13px;
+    }
+
+    .legal-content {
+        max-height: 50vh;
+    }
+
+    .legal-section {
+        padding: 16px;
+    }
+
+    .legal-section h3 {
+        font-size: 16px;
+    }
+
+    .legal-section p {
+        font-size: 14px;
+    }
+}
+
+/* Десктопные стили для модального окна изображения */
+@media (min-width: 769px) {
+    .image-modal-body img {
+        max-width: 85vw;
+        max-height: 75vh;
+    }
+    
+    .image-modal-body {
+        padding: 100px 60px 80px;
+    }
+}
+
+/* Модальное окно выбора языка */
+.language-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.language-option {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-radius: 12px;
+    background: #171717;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.language-option:hover {
+    background: #202020;
+    border-color: #404040;
+}
+
+.language-option.active {
+    border-color: #10a37f;
+    background: #1a2b28;
+}
+
+.language-info {
+    flex: 1;
+}
+
+.language-info h4 {
+    color: #ececf1;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.language-info p {
+    color: #8e8ea0;
+    font-size: 14px;
+}
+
+.language-check {
+    color: #10a37f;
+    font-size: 18px;
+    display: none;
+    margin-left: 12px;
+}
+
+.language-option.active .language-check {
+    display: block;
+}
+
+/* Дополнительная иконка для настроек языка */
+.setting-icon.language {
+    background: linear-gradient(135deg, #10a37f, #0d8268);
+    color: white;
+}
+
+/* Адаптивность для модального окна языка */
+@media (max-width: 768px) {
+    .language-option {
+        padding: 14px 16px;
+    }
+    
+    .language-info h4 {
+        font-size: 15px;
+    }
+    
+    .language-info p {
+        font-size: 13px;
+    }
+}
+
+/* Notion Integration Styles */
+.setting-icon.notion {
+    background: linear-gradient(135deg, #000000, #2a2a2a);
+    color: white;
+    position: relative;
+}
+
+.setting-icon.notion::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 32 32'%3e%3cpath fill='white' d='M27 4.5h-5a1.5 1.5 0 0 0 0 3h1v12.66L14.814 5.278A1.5 1.5 0 0 0 13.5 4.5H5a1.5 1.5 0 0 0 0 3h1v17H5a1.5 1.5 0 1 0 0 3h5a1.5 1.5 0 1 0 0-3H9V11.84l8.186 14.883a1.5 1.5 0 0 0 1.314.777h6A1.5 1.5 0 0 0 26 26V7.5h1a1.5 1.5 0 0 0 0-3m-16.962 3h2.575l9.35 17h-2.576z'/%3e%3c/svg%3e");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.notion-modal-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #000000, #2a2a2a);
+    border-radius: 4px;
+    margin-right: 8px;
+    vertical-align: middle;
+    position: relative;
+}
+
+.notion-modal-icon::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 32 32'%3e%3cpath fill='white' d='M27 4.5h-5a1.5 1.5 0 0 0 0 3h1v12.66L14.814 5.278A1.5 1.5 0 0 0 13.5 4.5H5a1.5 1.5 0 0 0 0 3h1v17H5a1.5 1.5 0 1 0 0 3h5a1.5 1.5 0 1 0 0-3H9V11.84l8.186 14.883a1.5 1.5 0 0 0 1.314.777h6A1.5 1.5 0 0 0 26 26V7.5h1a1.5 1.5 0 0 0 0-3m-16.962 3h2.575l9.35 17h-2.576z'/%3e%3c/svg%3e");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Notion Modal Toggle Section */
+.notion-toggle-section {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #444;
+}
+
+.notion-api-section {
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.api-key-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #ececf1;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.api-key-input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.api-key-input {
+    flex: 1;
+    padding: 12px 16px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #ececf1;
+    font-size: 14px;
+    font-family: 'Monaco', 'Consolas', monospace;
+}
+
+.api-key-input:focus {
+    outline: none;
+    border-color: #10a37f;
+    box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.1);
+}
+
+.btn-show-hide {
+    padding: 12px 16px;
+    font-size: 14px;
+    min-width: auto;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.notion-instructions {
+    background: #2a2a2a;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.instructions-header {
+    padding: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #333;
+    transition: background 0.2s ease;
+}
+
+.instructions-header:hover {
+    background: #3a3a3a;
+}
+
+.instructions-header h5 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ececf1;
+    font-size: 14px;
+}
+
+.instructions-header i:last-child {
+    transition: transform 0.3s ease;
+    color: #10a37f;
+}
+
+.instructions-header.expanded i:last-child {
+    transform: rotate(180deg);
+}
+
+.instructions-content {
+    padding: 0 16px 16px 16px;
+    color: #b4b4b4;
+    line-height: 1.6;
+}
+
+.instructions-content ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.instructions-content li {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.warning-note {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 6px;
+    padding: 12px;
+    margin-top: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.warning-note i {
+    color: #ffc107;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.warning-note span {
+    font-size: 13px;
+    color: #e6e6e6;
+}
+
+.info-note {
+    background: rgba(16, 163, 127, 0.1);
+    border: 1px solid rgba(16, 163, 127, 0.3);
+    border-radius: 6px;
+    padding: 12px;
+    margin-top: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.info-note i {
+    color: #10a37f;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.info-note span {
+    font-size: 13px;
+    color: #e6e6e6;
+}
+
+.success-note {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 6px;
+    padding: 12px;
+    margin-top: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.success-note i {
+    color: #22c55e;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.success-note span {
+    font-size: 13px;
+    color: #e6e6e6;
+    line-height: 1.5;
+}
+
+/* Page Selection Styles */
+.notion-page-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.section-header h5 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: #ececf1;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.section-header h5 i {
+    color: #10a37f;
+}
+
+.btn-refresh {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #ececf1;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-refresh:hover {
+    background: #363636;
+    border-color: #555;
+}
+
+.btn-refresh:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pages-list {
+    margin-bottom: 16px;
+}
+
+.loading-pages, .no-pages, .error-pages {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    background: #2a2a2a;
+    border-radius: 8px;
+    color: #ececf1;
+    font-size: 14px;
+    justify-content: center;
+    text-align: center;
+}
+
+.loading-pages i {
+    color: #10a37f;
+    animation: spin 1s linear infinite;
+}
+
+.no-pages i {
+    color: #ff6b6b;
+}
+
+.error-pages i {
+    color: #ffa726;
+}
+
+.pages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+.page-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #2a2a2a;
+    border: 2px solid #444;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.page-card:hover {
+    background: #363636;
+    border-color: #10a37f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 163, 127, 0.15);
+}
+
+.page-card.selected {
+    background: #0d4f3c;
+    border-color: #10a37f;
+    box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.3);
+}
+
+.page-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: #10a37f;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.page-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.page-title {
+    font-weight: 500;
+    color: #ececf1;
+    font-size: 14px;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.page-date {
+    font-size: 12px;
+    color: #a0a0a0;
+}
+
+.page-select-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid #10a37f;
+    color: #10a37f;
+    font-size: 12px;
+    opacity: 0;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.page-card:hover .page-select-btn {
+    opacity: 1;
+}
+
+.page-card.selected .page-select-btn {
+    opacity: 1;
+    background: #10a37f;
+    color: white;
+}
+
+.selected-page {
+    padding: 12px;
+    background: #0d4f3c;
+    border: 1px solid #10a37f;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.page-selection-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    color: #ececf1;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.page-selection-label i {
+    color: #10a37f;
+}
+
+.page-selection-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.page-select {
+    flex: 1;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: #ececf1;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.page-select:focus {
+    outline: none;
+    border-color: #10a37f;
+    box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.2);
+}
+
+.page-select option {
+    background: #2a2a2a;
+    color: #ececf1;
+    padding: 8px;
+}
+
+.btn-refresh {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: #ececf1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-refresh:hover {
+    background: #3a3a3a;
+    border-color: #10a37f;
+}
+
+.btn-refresh:active {
+    transform: scale(0.95);
+}
+
+.btn-refresh i {
+    font-size: 14px;
+}
+
+.page-info {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: rgba(16, 163, 127, 0.1);
+    border: 1px solid rgba(16, 163, 127, 0.3);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ececf1;
+    font-size: 13px;
+}
+
+.page-info i {
+    color: #10a37f;
+    flex-shrink: 0;
+}
+
+.page-info strong {
+    color: #10a37f;
+}
+
+/* Mobile responsive styles for Notion integration */
+@media (max-width: 768px) {
+    .api-key-input-group {
+        flex-direction: row;
+        gap: 8px;
+    }
+    
+    .btn-show-hide {
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .api-key-input {
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+    
+    .notion-toggle-section {
+        padding-bottom: 16px;
+        margin-bottom: 20px;
+    }
+}
