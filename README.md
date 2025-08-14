@@ -329,9 +329,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- **GitHub**: [@theknyazzzev](https://github.com/theknyazzzev)
+- **GitHub**: [@theknyazzev](https://github.com/theknyazzzev)
 - **Email**: theknyazzev@gmail.com
-- **Project**: [g4f website](https://github.com/theknyazzzev/g4f-website)
+- **Project**: [g4f website](https://github.com/theknyazzev/g4f-website)
 
 ---
 
