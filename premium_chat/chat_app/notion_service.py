@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 # Настройки прокси (можно вынести в settings.py)
 PROXY_SETTINGS = {
-    'http': 'http://17qe0x:fXQQuG@95.164.200.12:9459',
-    'https': 'http://17qe0x:fXQQuG@95.164.200.12:9459'
+    'http': 'http://log:pass@ip:port',
+    'https': 'http://log:pass@ip:port'
 }
 
 class NotionService:
